@@ -6,17 +6,18 @@ import {
   deleteUser,
   updateUser,
 } from "../controllers/user.controller";
+import authorize from "../middlewares/auth.middleware.js";
 
 const userRouter = Router();
 
 userRouter.get("/", getUsers);
 
-userRouter.get("/:id", getUser);
-
 userRouter.post("/", createUser);
 
-userRouter.put("/:id", updateUser);
+userRouter.get("/:id", authorize, getUser);
 
-userRouter.delete("/:id", deleteUser);
+userRouter.put("/:id", authorize, updateUser);
+
+userRouter.delete("/:id", authorize, deleteUser);
 
 export default userRouter;

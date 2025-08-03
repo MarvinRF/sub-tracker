@@ -1,3 +1,5 @@
+import User from "../models/user.model";
+
 const authorize = async (req, res, next) => {
   try {
     let token;
@@ -8,7 +10,7 @@ const authorize = async (req, res, next) => {
     ) {
       token = req.headers.authorization.split(" ")[1];
     }
-    
+
     if (!token) {
       res.status(401).json({ message: "Unauthorized" });
     }
@@ -27,3 +29,5 @@ const authorize = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized", error: error.message });
   }
 };
+
+export default authorize;
