@@ -5,7 +5,7 @@ import {
   createUser,
   deleteUser,
   updateUser,
-} from "../controllers/user.controller";
+} from "../controllers/user.controller.js";
 import authorize from "../middlewares/auth.middleware.js";
 
 const userRouter = Router();
