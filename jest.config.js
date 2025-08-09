@@ -91,7 +91,9 @@ const config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    "^@upstash/workflow/express$": "<rootDir>/__mocks__/@upstash/workflow.cjs",
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -147,7 +149,7 @@ const config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-node",
+  testEnvironment: "jest-environment-node",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
