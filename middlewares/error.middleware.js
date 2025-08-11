@@ -1,37 +1,43 @@
-
 const errorMiddleware = (err, req, res, next) => {
-    try{
-        let error = { ...err}
+  try {
+    let statusCode = err.statusCode || 500;
+    let message = err.message || "Server Error";
 
-        error.message = err.message;
-        console.error(err);
+    // Log sanitizado
+    console.error({
+      name: err.name,
+      message: err.message,
+      stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    });
 
-        //Mongoose bad ObjectId
-        if (err.name === 'CastError') {
-            const message = `Resource not found. Invalid ${err.path}`;
-            error = new Error(message);
-            error.statusCode = 404;
-        }
-        //Mongoose duplicate key
-        if(err.code === 11000){
-            const message = 'Duplicate field value entered';
-            error = new Error(message);
-            error.statusCode = 400;
-        }
-        //Mongoose Validation error
-        if(err.name === 'ValidationError'){
-            const message = Object.values(err.errors).map(val => val.message);
-            error = new Error(message.join(', '));
-            error.statusCode = 400;
-        }
-        res.status(error.statusCode || 500).json({
-            success: false,
-            error: error.message || 'Server Error'
-        });
+    // Mongoose bad ObjectId
+    if (err.name === "CastError") {
+      message = `Resource not found. Invalid ${err.path}`;
+      statusCode = 404;
     }
-    catch (error){
-        next(error);
+
+    // Mongoose duplicate key
+    if (err.code === 11000) {
+      message = "Duplicate field value entered";
+      statusCode = 400;
     }
+
+    // Mongoose Validation error
+    if (err.name === "ValidationError") {
+      message = Object.values(err.errors)
+        .map((val) => val.message)
+        .join(", ");
+      statusCode = 400;
+    }
+
+    res.status(statusCode).json({
+      success: false,
+      error: message,
+    });
+  } catch (internalError) {
+    // Se algo der errado aqui, encaminha para o próximo middleware de erro
+    next(internalError);
+  }
 };
 
 export default errorMiddleware;
